@@ -1,0 +1,15 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Calculado" parent="Theme.Material3.DayNight">
+        <!-- Customize your light theme here. -->
+<!--       <item name="colorPrimary">@color/verde</item>-->
+<!--        <item name="colorOnPrimary">@color/black</item>-->
+    </style>
+
+    <style name="Theme.Calculado" parent="Base.Theme.Calculado" />
+    <style name="Base.Theme.MYCalculado" parent="Theme.Material3.DayNight">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/verde</item>
+        <item name="colorOnPrimary">@color/black</item>
+    </style>
+</resources>

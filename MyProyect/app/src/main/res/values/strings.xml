@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">My Proyect</string>
+    <string name="text_button">Saludos de da2d1e</string>
+    <string-array name="spinner">
+        <item>España</item>
+        <item>Francia</item>
+        <item>Inglaterra</item>
+    </string-array>
+</resources>
