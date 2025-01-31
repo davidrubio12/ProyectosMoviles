@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-      textOut.text = 
+
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
