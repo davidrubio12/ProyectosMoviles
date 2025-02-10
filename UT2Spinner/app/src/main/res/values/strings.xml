@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">UT2-Spinner</string>
+    <string-array name="temas">
+        <item>Seleccione</item>
+        <item>Serie</item>
+        <item>Grupo Musica</item>
+        <item>Anime</item>
+
+    </string-array>
+</resources>
