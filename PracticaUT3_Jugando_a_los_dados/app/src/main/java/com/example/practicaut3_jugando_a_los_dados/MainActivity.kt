@@ -1,47 +1,34 @@
 package com.example.practicaut3_jugando_a_los_dados
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Spinner
-import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
-import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.snackbar.Snackbar
-import kotlin.random.Random
+import kotlinx.coroutines.*
+import android.view.View
+import android.widget.*
 
 class MainActivity : AppCompatActivity() {
+
     private var saldo = 100
-    private lateinit var toggleGroup: MaterialButtonToggleGroup
+    private var juegoJob: Job? = null  // Variable para controlar la corrutina del juego
+
+    private lateinit var toggleGroup: com.google.android.material.button.MaterialButtonToggleGroup
     private lateinit var spinner: Spinner
     private lateinit var edtApuesta: EditText
-    private lateinit var  btnLanzar : Button
+    private lateinit var btnLanzar: Button
     private lateinit var txtSaldo: TextView
-    private lateinit var txtDado1:TextView
-    private lateinit var txtDado2:TextView
-    private lateinit var imgResultado :ImageView
-    private lateinit var myCoordinator : View
-
+    private lateinit var txtDado1: TextView
+    private lateinit var txtDado2: TextView
+    private lateinit var imgResultado: ImageView
+    private lateinit var myCoordinator: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+
         txtDado1 = findViewById(R.id.txtDado1)
         txtDado2 = findViewById(R.id.txtDado2)
         imgResultado = findViewById(R.id.imgResultado)
@@ -68,79 +55,88 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnLanzar.setOnClickListener {
-            val apuestaStr = edtApuesta.text.toString()
+            iniciarJuego()
+        }
+    }
 
+    private fun iniciarJuego() {
+        val apuestaStr = edtApuesta.text.toString()
 
-            if (apuestaStr.isEmpty()) {
-                Snackbar.make(myCoordinator, "Por favor, ingrese una apuesta", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+        if (apuestaStr.isEmpty()) {
+            Snackbar.make(myCoordinator, "Por favor, ingrese una apuesta", Snackbar.LENGTH_SHORT).show()
+            return
+        }
 
-            val apuesta = apuestaStr.toIntOrNull()
-            if (apuesta == null || apuesta <= 0) {
-                Snackbar.make(myCoordinator, "Ingrese un número válido mayor que 0", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+        val apuesta = apuestaStr.toIntOrNull()
+        if (apuesta == null || apuesta <= 0) {
+            Snackbar.make(myCoordinator, "Ingrese un número válido mayor que 0", Snackbar.LENGTH_SHORT).show()
+            return
+        }
 
-            // Validar que la apuesta no sea mayor al saldo
-            if (apuesta > saldo) {
-                Snackbar.make(myCoordinator, "No puedes apostar más de tu saldo actual", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+        if (apuesta > saldo) {
+            Snackbar.make(myCoordinator, "No puedes apostar más de tu saldo actual", Snackbar.LENGTH_SHORT).show()
+            return
+        }
 
-            val opcionElegida = spinner.selectedItem?.toString()
-            if (opcionElegida == null) {
-                Snackbar.make(myCoordinator, "Seleccione una opción de apuesta", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+        val opcionElegida = spinner.selectedItem?.toString()
+        if (opcionElegida == null) {
+            Snackbar.make(myCoordinator, "Seleccione una opción de apuesta", Snackbar.LENGTH_SHORT).show()
+            return
+        }
 
-            // Si la apuesta es válida, continuar con la lógica del juego
-            Toast.makeText(this, "Apuesta válida: $apuesta€", Toast.LENGTH_SHORT).show()
-            Glide.with(this).load(R.drawable.dado_imagen_animada_0092).into(imgResultado)
-            imgResultado.visibility = ImageView.VISIBLE
+        // Mostrar animación del dado
+        Toast.makeText(this, "Apuesta válida: $apuesta€", Toast.LENGTH_SHORT).show()
+        Glide.with(this).load(R.drawable.dado_imagen_animada_0092).into(imgResultado)
+        imgResultado.visibility = ImageView.VISIBLE
 
-            // Simulación de lanzamiento con retardo de 3 segundos
-            Handler(Looper.getMainLooper()).postDelayed({
-                val dado1 = Random.nextInt(1, 7)
-                val dado2 = Random.nextInt(1, 7)
-                val sumaDados = dado1 + dado2
+        // Si hay una corrutina activa, la cancelamos antes de iniciar otra
+        juegoJob?.cancel()
 
-                txtDado1.text = "$dado1"
-                txtDado2.text = "$dado2"
+        // Lanza la lógica del juego con una nueva corrutina
+        juegoJob = CoroutineScope(Dispatchers.Main).launch {
+            lanzarDados(apuesta, opcionElegida)
+        }
+    }
 
-                val gano = when {
-                    opcionElegida == "Par" && sumaDados % 2 == 0 -> true
-                    opcionElegida == "Impar" && sumaDados % 2 != 0 -> true
-                    opcionElegida == "Mayor o igual a 7" && sumaDados >= 7 -> true
-                    opcionElegida == "Menor a 7" && sumaDados < 7 -> true
-                    else -> false
-                }
+    private suspend fun lanzarDados(apuesta: Int, opcionElegida: String) {
+        delay(3000) // Simula el tiempo de lanzamiento de los dados
 
-                if (gano) {
-                    saldo += apuesta
-                    imgResultado.setImageResource(R.drawable.ganar_dados)
-                    Toast.makeText(this, "¡Ganaste $apuesta€!", Toast.LENGTH_SHORT).show()
-                } else {
-                    saldo -= apuesta
-                    imgResultado.setImageResource(R.drawable.perder_dados)
-                    Toast.makeText(this, "¡Perdiste $apuesta€!", Toast.LENGTH_SHORT).show()
-                }
+        val dado1 = (1..6).random()
+        val dado2 = (1..6).random()
+        val sumaDados = dado1 + dado2
 
-                txtSaldo.text = "Saldo: $saldo€"
+        txtDado1.text = "$dado1"
+        txtDado2.text = "$dado2"
 
-                // Verificar si el saldo es 0 y terminar el juego
-                if (saldo == 0) {
-                    Toast.makeText(this, "Te has quedado sin saldo. Fin del juego.", Toast.LENGTH_LONG).show()
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        preguntarSeguirJugando() // Cierra la app después de 1.5 segundos
-                    }, 1500)
-                } else {
-                    // Preguntar si el jugador quiere seguir jugando después de 1 segundo
-                    Handler(Looper.getMainLooper()).postDelayed({
+        val gano = when {
+            opcionElegida == "Par" && sumaDados % 2 == 0 -> true
+            opcionElegida == "Impar" && sumaDados % 2 != 0 -> true
+            opcionElegida == "Mayor o igual a 7" && sumaDados >= 7 -> true
+            opcionElegida == "Menor a 7" && sumaDados < 7 -> true
+            else -> false
+        }
 
-                    }, 1000)
-                }
-            }, 3000)
+        if (gano) {
+            saldo += apuesta
+            imgResultado.setImageResource(R.drawable.ganar_dados)
+            Toast.makeText(this@MainActivity, "¡Ganaste $apuesta€!", Toast.LENGTH_SHORT).show()
+        } else {
+            saldo -= apuesta
+            imgResultado.setImageResource(R.drawable.perder_dados)
+            Toast.makeText(this@MainActivity, "¡Perdiste $apuesta€!", Toast.LENGTH_SHORT).show()
+        }
+
+        txtSaldo.text = "Saldo: $saldo€"
+
+        // Verificar si el saldo es 0 y terminar el juego
+        if (saldo == 0) {
+            Toast.makeText(this@MainActivity, "Te has quedado sin saldo. Fin del juego.", Toast.LENGTH_LONG).show()
+            imgResultado.setImageResource(R.drawable.bancarrota)
+            delay(1500) // Espera 1.5 segundos antes de cerrar
+            finish()
+        } else {
+            delay(1000) // Espera 1 segundo antes de preguntar si sigue jugando
+            preguntarSeguirJugando()
         }
     }
 
@@ -152,8 +148,9 @@ class MainActivity : AppCompatActivity() {
             .create()
         alertDialog.show()
     }
-        }
 
-
-
-
+    override fun onDestroy() {
+        super.onDestroy()
+        juegoJob?.cancel() // Cancelamos la corrutina para evitar fugas de memoria
+    }
+}
