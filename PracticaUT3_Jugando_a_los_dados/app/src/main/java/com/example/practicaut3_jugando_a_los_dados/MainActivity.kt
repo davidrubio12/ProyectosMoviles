@@ -84,22 +84,22 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        // Mostrar animación del dado
+    
         Toast.makeText(this, "Apuesta válida: $apuesta€", Toast.LENGTH_SHORT).show()
         Glide.with(this).load(R.drawable.dado_imagen_animada_0092).into(imgResultado)
         imgResultado.visibility = ImageView.VISIBLE
 
-        // Si hay una corrutina activa, la cancelamos antes de iniciar otra
+
         juegoJob?.cancel()
 
-        // Lanza la lógica del juego con una nueva corrutina
+
         juegoJob = CoroutineScope(Dispatchers.Main).launch {
             lanzarDados(apuesta, opcionElegida)
         }
     }
 
     private suspend fun lanzarDados(apuesta: Int, opcionElegida: String) {
-        delay(3000) // Simula el tiempo de lanzamiento de los dados
+        delay(3000)
 
         val dado1 = (1..6).random()
         val dado2 = (1..6).random()
@@ -128,14 +128,14 @@ class MainActivity : AppCompatActivity() {
 
         txtSaldo.text = "Saldo: $saldo€"
 
-        // Verificar si el saldo es 0 y terminar el juego
+
         if (saldo == 0) {
             Toast.makeText(this@MainActivity, "Te has quedado sin saldo. Fin del juego.", Toast.LENGTH_LONG).show()
             imgResultado.setImageResource(R.drawable.bancarrota)
-            delay(1500) // Espera 1.5 segundos antes de cerrar
+            delay(1500)
             finish()
         } else {
-            delay(1000) // Espera 1 segundo antes de preguntar si sigue jugando
+            delay(1000)
             preguntarSeguirJugando()
         }
     }
@@ -151,6 +151,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        juegoJob?.cancel() // Cancelamos la corrutina para evitar fugas de memoria
+        juegoJob?.cancel()
     }
 }
