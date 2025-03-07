@@ -13,7 +13,7 @@ import android.widget.*
 class MainActivity : AppCompatActivity() {
 
     private var saldo = 100
-    private var juegoJob: Job? = null  // Variable para controlar la corrutina del juego
+    private var juegoJob: Job? = null
 
     private lateinit var toggleGroup: com.google.android.material.button.MaterialButtonToggleGroup
     private lateinit var spinner: Spinner

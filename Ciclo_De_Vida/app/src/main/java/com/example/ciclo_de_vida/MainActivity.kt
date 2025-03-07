@@ -1,6 +1,7 @@
 package com.example.ciclo_de_vida
 
 import android.os.Bundle
+import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -49,4 +50,5 @@ class MainActivity : AppCompatActivity() {
         binding.tv1.text = savedInstanceState.getString("contador")
 
     }
+    
 }
