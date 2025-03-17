@@ -1,6 +1,7 @@
 package com.example.recyclerview
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerview.databinding.ActivityMainBinding
 import com.example.recyclerview.model.MainViewModel
 import com.example.recyclerview.recycler.MyAdapter
@@ -52,6 +54,33 @@ class MainActivity : AppCompatActivity() {
                 val myDivider = DividerItemDecoration(rvAnimales.getContext(),mLayout.orientation)
 
                 rvAnimales.addItemDecoration(myDivider)
+
+            }
+
+            btnDelete.setOnClickListener{
+                if (myAdapter.clickPosition < 0){
+                    Toast.makeText(applicationContext,"Debe seleccionar una fila", Toast.LENGTH_LONG).show()
+                    return@setOnClickListener
+                }
+                myViewModel.delete(myAdapter.clickPosition)
+            }
+
+            myViewModel._delete.observe(this@MainActivity){
+                myAdapter.notifyItemRemoved(it.position)
+                myAdapter.clickPosition = RecyclerView.NO_POSITION
+               myAdapter.notifyItemRangeChanged(0,it.animales.size)
+            }
+            bntadd.setOnClickListener {
+                var position = myAdapter.clickPosition
+                if (position< 0){
+                    position = 0
+                }
+                myViewModel.add(position,textInput.text.toString())
+            }
+
+            myViewModel.add.observe(this@MainActivity){
+                myAdapter.notifyItemInserted(it.position)
+                myAdapter.notifyItemRangeChanged(0,it.animales.size)
 
             }
         }
