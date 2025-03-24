@@ -12,13 +12,14 @@ import com.example.ut4_recyclerview.databinding.ActivityMainBinding
 import com.example.ut4_recyclerview.model.MainViewModel
 import com.example.ut4_recyclerview.recycler.MyAdapter
 
+
 class MainActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityMainBinding
     private val myViewModel: MainViewModel by viewModels()
     lateinit var myAdapter: MyAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -31,26 +32,53 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-
         with(binding) {
-            myViewModel.devuelveArray();
-
+            myViewModel.devuelveArray()
             val mLayout = LinearLayoutManager(this@MainActivity)
-
             rvColores.layoutManager = mLayout
-
 
             myViewModel.datos.observe(this@MainActivity) {
                 myAdapter = MyAdapter(it)
                 rvColores.adapter = myAdapter
 
-                val myDivider = DividerItemDecoration(rvColores.context,mLayout.orientation)
+                val midiverItemDecoration = DividerItemDecoration(
+                    rvColores.context, mLayout.orientation
+                )
+                rvColores.addItemDecoration(midiverItemDecoration)
+            }
 
-                rvColores.addItemDecoration(myDivider)
 
+            deleteButton.setOnClickListener {
+                val position = 0
+                myViewModel.eliminarColor(position)
+                myAdapter.notifyItemRemoved(position)
+                rvColores.scheduleLayoutAnimation()
+            }
+
+
+            addButton.setOnClickListener {
+                val nombre = etNombreColor.text.toString()
+                val hexCode = etHexCode.text.toString()
+
+                if (nombre.isNotEmpty() && hexCode.isNotEmpty()) {
+                    val newColor = Color(nombre, hexCode)
+                    val position = myViewModel.datos.value?.size ?: 0
+                    myViewModel.agregarColor(position, newColor)
+                    myAdapter.notifyItemInserted(position)
+                    rvColores.scheduleLayoutAnimation()
+
+
+                    etNombreColor.text?.clear()
+                    etHexCode.text?.clear()
+                } else {
+
+                    android.widget.Toast.makeText(
+                        this@MainActivity,
+                        "Por favor, ingresa un nombre y un código hexadecimal",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
-
-
     }
 }

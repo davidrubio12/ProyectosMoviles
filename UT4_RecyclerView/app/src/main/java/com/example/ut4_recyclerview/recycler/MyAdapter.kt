@@ -23,5 +23,18 @@ class MyAdapter(private val dataSet: List<Color>) : RecyclerView.Adapter<MyView>
         holder.tvNombreColor.text = color.nombre
         holder.tvCodigoHex.text = color.codigoHex
         holder.itemView.setBackgroundColor(android.graphics.Color.parseColor(color.codigoHex))
+
+        holder.itemView.setOnClickListener {
+            holder.tvNombreColor.setTextColor(android.graphics.Color.parseColor(color.codigoHex))
+            holder.tvCodigoHex.setTextColor(android.graphics.Color.parseColor(color.codigoHex))
+            holder.itemView.setBackgroundColor(android.graphics.Color.WHITE)
+        }
+
+        holder.itemView.setOnLongClickListener{
+            holder.tvNombreColor.setTextColor(android.graphics.Color.WHITE)
+            holder.tvCodigoHex.setTextColor(android.graphics.Color.WHITE)
+            holder.itemView.setBackgroundColor(android.graphics.Color.parseColor(color.codigoHex))
+            true
+        }
     }
 }

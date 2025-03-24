@@ -8,7 +8,7 @@ import com.example.ut4_recyclerview.R
 
 class MyAdapter(private val dataSet: List<Color>) : RecyclerView.Adapter<MyView>() {
 
-    var clickPosition : Int = RecyclerView.NO_POSITION
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyView {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.linea, parent, false)
         return MyView(view)
@@ -19,22 +19,22 @@ class MyAdapter(private val dataSet: List<Color>) : RecyclerView.Adapter<MyView>
 
 
     override fun onBindViewHolder(holder: MyView, position: Int) {
-        holder.tvNombreColor.text = dataSet[position].nombre
-        holder.tvCodigoHex.text = dataSet[position].codigoHex
-        holder.itemView.setBackgroundColor(android.graphics.Color.parseColor(dataSet[position].codigoHex))
-
-        if (position == clickPosition){
-            holder.itemView.setTextColor(android.graphics.Color.WHITE)
-            holder.itemView.setBackgroundColor(android.graphics.Color.RED)
-        }
-
+        val color = dataSet[position]
+        holder.tvNombreColor.text = color.nombre
+        holder.tvCodigoHex.text = color.codigoHex
+        holder.itemView.setBackgroundColor(android.graphics.Color.parseColor(color.codigoHex))
 
         holder.itemView.setOnClickListener {
-            // TODO: implementar acciones al dar click en un item
+            holder.tvNombreColor.setTextColor(android.graphics.Color.parseColor(color.codigoHex))
+            holder.tvCodigoHex.setTextColor(android.graphics.Color.parseColor(color.codigoHex))
+            holder.itemView.setBackgroundColor(android.graphics.Color.WHITE)
         }
-        val color = dataSet[position]
-//        holder.tvNombreColor.text = color.nombre
-//        holder.tvCodigoHex.text = color.codigoHex
-//        holder.itemView.setBackgroundColor(android.graphics.Color.parseColor(color.codigoHex))
+
+        holder.itemView.setOnLongClickListener{
+            holder.tvNombreColor.setTextColor(android.graphics.Color.WHITE)
+            holder.tvCodigoHex.setTextColor(android.graphics.Color.WHITE)
+            holder.itemView.setBackgroundColor(android.graphics.Color.parseColor(color.codigoHex))
+            true
+        }
     }
 }

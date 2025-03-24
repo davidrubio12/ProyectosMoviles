@@ -3,7 +3,6 @@ package com.example.ut4_recyclerview.model
 import com.example.ut4_recyclerview.Color
 
 class MainState {
-
     var colores = mutableListOf(
         Color("Verde", "#4CAF50"),
         Color("Amarillo", "#FFEB3B"),
@@ -14,20 +13,19 @@ class MainState {
         Color("Gris", "#757575"),
         Color("Violeta", "#673AB7"),
         Color("blanco", "#FFFFFF"),
-        Color("Rosa", "#FF0080"),
-    )
+        Color("Rosa", "#FF0080"))
 
     fun devuelveColores(): MutableList<Color> {
         return colores
-    }
 
-    fun delete(position : Int): MyData{
+    }
+    fun delete(position:Int):MyData {
         colores.removeAt(position)
         return MyData(position,colores)
     }
-    fun add(position: Int,color: Color): MyData{
-        colores.add(position, color)
-        return MyData(position,colores)
+    fun add(position:Int,nombre: Color): MyData {
+        colores.add(position,nombre)
+        return MyData(position, colores)
     }
 
 }

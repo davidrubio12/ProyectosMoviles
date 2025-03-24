@@ -21,6 +21,18 @@ class MainViewModel : ViewModel() {
 
 
     }
+    fun agregarColor(position:Int,color: Color) {
+        viewModelScope.launch {
+            myEstado.add(position,color)
+            _datos.value = myEstado.devuelveColores()
+        }
+    }
+    fun eliminarColor(position: Int) {
+        viewModelScope.launch {
+            myEstado.delete(position)
+            _datos.value = myEstado.devuelveColores()
+        }
+    }
 
 
 }
