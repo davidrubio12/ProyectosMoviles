@@ -24,26 +24,26 @@ class LoginActivity : AppCompatActivity() {
 
         loginButton.setOnClickListener {
             // Obtener el nombre de usuario y la contraseña ingresados
-            val username = usernameEditText.text.toString()
+            val email = usernameEditText.text.toString()
             val password = passwordEditText.text.toString()
 
-            if (username.isNotEmpty() && password.isNotEmpty()) {
+            if (email.isNotEmpty() && password.isNotEmpty()) {
                 // Llamar al método de login
-                login(username, password)
+                login(email, password)
             } else {
                 Toast.makeText(this, "Por favor ingrese un usuario y contraseña", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun login(username: String, password: String) {
+    private fun login(email: String, password: String) {
         // Llamada asíncrona a login en el backend usando Retrofit y coroutines
         lifecycleScope.launch {
             // Instanciamos el MainState, donde se hace la llamada a Retrofit
             val mainState = MainState()
 
             try {
-                val jwtTokensDto = mainState.login(username, password)
+                val jwtTokensDto = mainState.login(email, password)
 
                 if (jwtTokensDto != null) {
                     // Guardar los tokens en SharedPreferences

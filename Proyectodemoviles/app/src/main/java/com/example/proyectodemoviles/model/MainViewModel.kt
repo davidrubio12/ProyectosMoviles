@@ -4,29 +4,30 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.proyectodemoviles.data.TokenManager
+import com.example.proyectodemoviles.model.dto.ProductDto
 import com.example.proyectodemoviles.util.Foto
 import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
+class MainViewModel(private val tokenManager: TokenManager) : ViewModel() {
 
-    val myEstado = MainState()
-    private val _datos = MutableLiveData<List<Foto>>(emptyList())
+    private val mainState = MainState()
 
-    val datos: LiveData<List<Foto>> get() = _datos
+    private val _productos = MutableLiveData<List<ProductDto>>()
+    val productos: LiveData<List<ProductDto>> get() = _productos
 
-    fun devuelveFotos(raza: String) {
+    private val _error = MutableLiveData<String>()
+    val error: LiveData<String> get() = _error
+
+    fun cargarProductos(search: String = "", categoriaId: Long? = null) {
         viewModelScope.launch {
-            val respuesta = myEstado.recuperaFotos(raza)
-            val listaFotos = respuesta.message?.map { url ->
-                Foto(
-                    id = url.hashCode().toString(), // puedes usar UUID.randomUUID().toString()
-                    url = url,
-                    title = "Producto $raza",
-                    price = 10.0 // o un valor aleatorio si prefieres
-                )
-            } ?: emptyList()
-            _datos.value = listaFotos
+            val token = tokenManager.getAccessToken()
+            if (token != null) {
+                val resultado = mainState.getProducts(search, categoriaId, token)
+                _productos.value = resultado
+            } else {
+                _error.value = "Token no disponible"
+            }
         }
     }
-
 }

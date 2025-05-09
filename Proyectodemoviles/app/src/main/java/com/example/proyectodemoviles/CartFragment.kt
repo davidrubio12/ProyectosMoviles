@@ -4,9 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.proyectodemoviles.data.TokenManager
+import com.example.proyectodemoviles.model.CartViewModel
 
 import com.example.proyectodemoviles.recycler.CartAdapter
 import com.example.proyectodemoviles.util.Cart
@@ -16,7 +21,7 @@ class CartFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CartAdapter
-    private var carritoList: MutableList<Cart> = mutableListOf()  // Lista de productos en el carrito
+    private lateinit var viewModel: CartViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,17 +32,35 @@ class CartFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerCart)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        // Aquí puedes obtener los productos del carrito, ya sea de un ViewModel o de una clase Singleton
-        // Ejemplo usando ViewModel (ver siguiente sección)
+        val tokenManager = TokenManager(requireContext())
+        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return CartViewModel(tokenManager) as T
+            }
+        }).get(CartViewModel::class.java)
 
-        // Simulamos algunos productos en el carrito
-        carritoList = CartList.obtenerProductos().toMutableList()  // Convertimos la lista de Cart a MutableList para poder modificarla
+        viewModel.cart.observe(viewLifecycleOwner) { carrito ->
+            adapter = CartAdapter(
+                carrito.items,
+                onDeleteClick = { item -> viewModel.eliminarItem(item.productId) },
+                onSumarClick = { item -> viewModel.modificarCantidad(item.productId, item.quantity + 1) },
+                onRestarClick = { item ->
+                    if (item.quantity > 1) {
+                        viewModel.modificarCantidad(item.productId, item.quantity - 1)
+                    } else {
+                        viewModel.eliminarItem(item.productId)
+                    }
+                }
+            )
+            recyclerView.adapter = adapter
+        }
 
-        // Configuramos el RecyclerView con el adapter
-        adapter = CartAdapter(carritoList)
-        recyclerView.adapter = adapter
+        viewModel.error.observe(viewLifecycleOwner) {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.cargarCarrito()
 
         return view
     }
-    // Opcionalmente, podrías implementar métodos para agregar, eliminar o actualizar productos en el carrito
 }

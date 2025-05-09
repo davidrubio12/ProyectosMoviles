@@ -6,36 +6,39 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.proyectodemoviles.R
+import com.example.proyectodemoviles.databinding.RowBinding
 import com.example.proyectodemoviles.model.ProductRespuesta
+import com.example.proyectodemoviles.model.dto.ProductDto
 import com.example.proyectodemoviles.util.Foto
 
-class MyAdapter(private val dataSet: List<Foto>, private val onItemClick: (Foto) -> Unit) // recibe la URL o el identificador del producto
- : RecyclerView.Adapter<MyView>(){
+class MyAdapter(
+    private val dataSet: List<ProductDto>,
+    private val onItemClick: (ProductDto) -> Unit
+) : RecyclerView.Adapter<MyAdapter.ProductViewHolder>() {
 
-    lateinit var myContexto : Context
+    inner class ProductViewHolder(private val binding: RowBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(product: ProductDto) {
+            binding.productoNombre.text = product.name
+            binding.productoPrecio.text = "Precio: $${product.price}"
+            Glide.with(binding.root.context)
+                .load(product.imageUrl)
+                .placeholder(R.drawable.broken_image)
+                .into(binding.imV1)
 
-
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyView {
-        myContexto = parent.context
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.row,parent,false)
-
-        return MyView(view)
+            binding.root.setOnClickListener {
+                onItemClick(product)
+            }
+        }
     }
 
-    override fun getItemCount()= dataSet.size
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
+        val binding = RowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ProductViewHolder(binding)
+    }
 
-    override fun onBindViewHolder(holder: MyView, position: Int) {
-        val foto = dataSet[position]
+    override fun getItemCount() = dataSet.size
 
-        Glide.with(myContexto)
-            .load(foto.url)
-            .into(holder.imV1)
-        // Aquí se gestiona el click
-        holder.itemView.setOnClickListener {
-            onItemClick(foto)
-        }
-
+    override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
+        holder.bind(dataSet[position])
     }
 }

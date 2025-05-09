@@ -20,20 +20,25 @@ class ProductDetailActivity : AppCompatActivity() {
         val editCantidad = findViewById<EditText>(R.id.editCantidad)
         val btnAgregar = findViewById<Button>(R.id.btnAgregarCarrito)
 
-        val url = intent.getStringExtra("url_imagen")
-        val nombreProducto = intent.getStringExtra("nombre_producto")
-        val precioProducto = intent.getDoubleExtra("precio_producto", 0.0)
+        // Recuperar datos pasados por intent
+        val nombre = intent.getStringExtra("nombre_producto")
+        val imagenUrl = intent.getStringExtra("url_imagen")
+        val precio = intent.getDoubleExtra("precio_producto", 0.0)
 
-        Glide.with(this).load(url).into(imageView)
+        // Mostrar imagen
+        Glide.with(this).load(imagenUrl).into(imageView)
 
         btnAgregar.setOnClickListener {
             val cantidad = editCantidad.text.toString().toIntOrNull()
-            if (cantidad != null && cantidad > 0) {
-                val carritoProducto = Cart(nombreProducto ?: "", cantidad, precioProducto)
 
-                // Añadir el producto al carrito
-                CartList.agregarProducto(carritoProducto)
-                Toast.makeText(this, "Añadido al carrito", Toast.LENGTH_SHORT).show()
+            if (cantidad != null && cantidad > 0) {
+                val producto = Cart(
+                    nombre = nombre ?: "Producto",
+                    cantidad = cantidad,
+                    precio = precio
+                )
+                CartList.agregarProducto(producto)
+                Toast.makeText(this, "Producto añadido al carrito", Toast.LENGTH_SHORT).show()
                 finish()
             } else {
                 Toast.makeText(this, "Introduce una cantidad válida", Toast.LENGTH_SHORT).show()
