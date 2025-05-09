@@ -51,7 +51,7 @@ class ProductFragment : Fragment() {
 
 
         val tokenManager = TokenManager(requireContext())
-        viewModel = ViewModelProvider(this, MainViewModelFactory(tokenManager)).get(MainViewModel::class.java)
+//        viewModel = ViewModelProvider(this, MainViewModelFactory(tokenManager)).get(MainViewModel::class.java)
 
         viewModel.productos.observe(viewLifecycleOwner) { productos ->
             adapter = MyAdapter(productos) { producto ->

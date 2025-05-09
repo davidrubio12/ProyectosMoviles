@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainState {
 
-    private val BASE_URL = "http://10.0.2.2:8000/api/app/v1/"
+    private val BASE_URL = "http://10.0.2.2:8000/home/app/api/app/v1/"
 
     // Retrofit sin token, para login y registro
     private val retrofitNoAuth = Retrofit.Builder()
@@ -21,9 +21,9 @@ class MainState {
 
     suspend fun login(email: String, password: String): JwtTokensDto? {
         val authService = retrofitNoAuth.create(AuthService::class.java)
-        val dto = LoginUserDto(email, password)
-        val response = authService.login(dto)
-        return if (response.isSuccessful) response.body() else null
+        val loginUserDto = LoginUserDto(email, password)
+        val response = authService.login(loginUserDto)
+        return response.body()
     }
 
     // Retrofit con token JWT

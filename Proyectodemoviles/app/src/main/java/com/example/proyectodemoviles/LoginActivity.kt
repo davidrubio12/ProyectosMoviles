@@ -5,14 +5,17 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.proyectodemoviles.data.Util
+import com.example.proyectodemoviles.model.LoginViewModel
 import com.example.proyectodemoviles.model.MainState
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
-
+private val loginViewModel : LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +25,14 @@ class LoginActivity : AppCompatActivity() {
         val usernameEditText: EditText = findViewById(R.id.editTextUsername)
         val passwordEditText: EditText = findViewById(R.id.editTextPassword)
 
+        loginViewModel.tokens.observe(this){
+            if(loginViewModel.tokens.value!= null){
+                Util.accessToken = loginViewModel.tokens.value!!.accessToken
+            }else{
+
+            }
+        }
+
         loginButton.setOnClickListener {
             // Obtener el nombre de usuario y la contraseña ingresados
             val email = usernameEditText.text.toString()
@@ -29,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 // Llamar al método de login
-                login(email, password)
+                loginViewModel.login(email, password)
             } else {
                 Toast.makeText(this, "Por favor ingrese un usuario y contraseña", Toast.LENGTH_SHORT).show()
             }
