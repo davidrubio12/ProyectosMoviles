@@ -11,19 +11,19 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyectodemoviles.R
-import com.example.proyectodemoviles.recycler.MyAdapter
+import com.example.proyectodemoviles.recycler.ProductAdapter
 import com.example.proyectodemoviles.viewmodel.MainViewModel
-import com.example.proyectodemoviles.ui.product.ProductDetailActivity
 
 class ProductFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var spinner: Spinner
-    private lateinit var adapter: MyAdapter
+    private lateinit var adapter: ProductAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,8 +36,10 @@ class ProductFragment : Fragment() {
 
         // RecyclerView
         recyclerView = view.findViewById(R.id.recyclerProductos)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = MyAdapter(emptyList()) { producto ->
+        val gridColumnCount = 2
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), gridColumnCount)
+
+        adapter = ProductAdapter(emptyList()) { producto ->
             val intent = Intent(requireContext(), ProductDetailActivity::class.java).apply {
                 putExtra("producto_id", producto.id)
                 putExtra("nombre_producto", producto.name)

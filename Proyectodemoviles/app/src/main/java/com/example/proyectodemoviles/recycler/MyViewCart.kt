@@ -1,0 +1,20 @@
+package com.example.proyectodemoviles.recycler
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.example.proyectodemoviles.R
+import com.google.android.material.button.MaterialButton
+
+// Define la clase que representa cada item en el recyclerView
+class MyViewCart(itemView: View)  : RecyclerView.ViewHolder(itemView) {
+
+    val productoImagen: ImageView = itemView.findViewById(R.id.productoImagen)
+    val productoNombre: TextView = itemView.findViewById(R.id.productoNombre)
+    val productoPrecio: TextView = itemView.findViewById(R.id.productoPrecio)
+    val productoSubtotal: TextView = itemView.findViewById(R.id.productoSubtotal)
+    val productoCantidad: TextView = itemView.findViewById(R.id.productoCantidad)
+    val btnSumar: MaterialButton = itemView.findViewById(R.id.btnSumar)
+    val btnRestar: MaterialButton = itemView.findViewById(R.id.btnRestar)
+    val iconDelete: ImageView = itemView.findViewById(R.id.iconDelete)
+}

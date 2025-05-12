@@ -10,8 +10,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.proyectodemoviles.R
-import com.example.proyectodemoviles.model.Cart
-import com.example.proyectodemoviles.model.CartList
 import com.example.proyectodemoviles.viewmodel.CartViewModel
 
 class ProductDetailActivity : AppCompatActivity() {
