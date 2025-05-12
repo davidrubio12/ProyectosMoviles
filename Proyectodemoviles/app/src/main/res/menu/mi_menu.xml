@@ -10,7 +10,7 @@
             android:title="@string/menu_home" />
         <item
             android:id="@+id/id_carrito"
-            android:icon="@drawable/calendar_month_24px"
+            android:icon="@drawable/shopping_cart_checkout_24px"
             android:iconTint="@color/black"
             android:title="@string/menu_carrito" />
 
@@ -19,13 +19,14 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/id_productos"
-            android:icon="@drawable/empty_dashboard_48px"
+            android:icon="@drawable/storefront_24px"
             android:iconTint="@color/black"
             android:title="@string/menu_productos" />
         <item
-            android:id="@+id/id_add"
-            android:icon="@drawable/magicemporium"
+            android:id="@+id/id_logout"
+            android:icon="@drawable/logout_24px"
             android:iconTint="@color/black"
-            android:title="Working in progress" />
+            android:title="Cerrar Sesion" />
+
     </group>
 </menu>

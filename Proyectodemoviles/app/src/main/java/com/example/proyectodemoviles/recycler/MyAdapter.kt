@@ -1,20 +1,22 @@
 package com.example.proyectodemoviles.recycler
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.proyectodemoviles.R
 import com.example.proyectodemoviles.databinding.RowBinding
-import com.example.proyectodemoviles.model.ProductRespuesta
 import com.example.proyectodemoviles.model.dto.ProductDto
-import com.example.proyectodemoviles.util.Foto
 
 class MyAdapter(
-    private val dataSet: List<ProductDto>,
+    private var dataSet: List<ProductDto>,
     private val onItemClick: (ProductDto) -> Unit
 ) : RecyclerView.Adapter<MyAdapter.ProductViewHolder>() {
+
+    fun updateData(newList: List<ProductDto>) {
+        dataSet = newList
+        notifyDataSetChanged()
+    }
 
     inner class ProductViewHolder(private val binding: RowBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(product: ProductDto) {

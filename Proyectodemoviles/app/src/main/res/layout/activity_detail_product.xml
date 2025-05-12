@@ -7,8 +7,25 @@
     <ImageView
         android:id="@+id/imageViewProducto"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"/>
+        android:layout_height="524dp"
+        android:scaleType="centerCrop" />
+    <TextView
+        android:id="@+id/textNombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nombre del producto"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/textPrecio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Precio"
+        android:textSize="18sp"
+        android:textColor="#444"
+        android:layout_marginBottom="8dp" />
 
     <EditText
         android:id="@+id/editCantidad"
@@ -21,5 +38,10 @@
         android:id="@+id/btnAgregarCarrito"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Añadir al carrito"/>
+        android:text="Añadir al carrito" />
+    <Button
+        android:id="@+id/btnVolver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Volver a productos" />
 </LinearLayout>

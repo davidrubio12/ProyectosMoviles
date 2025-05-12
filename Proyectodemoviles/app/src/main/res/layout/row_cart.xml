@@ -1,52 +1,97 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- row_carrito.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:padding="8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="16dp"
     android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/productoNombre"
+    <!-- Imagen del producto -->
+    <ImageView
+        android:id="@+id/productoImagen"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="centerCrop"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="Imagen del producto" />
+
+    <!-- Información de producto -->
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:text="Producto"
-        android:textSize="18sp"/>
+        android:layout_weight="1">
 
-    <Button
-        android:id="@+id/btnRestar"
+        <TextView
+            android:id="@+id/productoNombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/productoPrecio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Precio" />
+
+        <TextView
+            android:id="@+id/productoSubtotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Subtotal"
+            android:textStyle="italic"
+            android:textColor="#888888" />
+    </LinearLayout>
+
+    <!-- Controles: cantidad + botones -->
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="–" />
+        android:gravity="center_horizontal">
 
-    <TextView
-        android:id="@+id/productoCantidad"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
-        android:text="1" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center">
 
-    <Button
-        android:id="@+id/btnSumar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="+" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRestar"
+                style="@style/Widget.Material3.Button.Icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:icon="@drawable/remove_24px"
+                app:iconTint="@color/white"
+                app:backgroundTint="@color/purple_500"
+                android:text="" />
 
-    <TextView
-        android:id="@+id/productoPrecio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Precio" />
+            <TextView
+                android:id="@+id/productoCantidad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="1" />
 
-    <ImageView
-        android:id="@+id/iconDelete"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="8dp"
-        android:src="@drawable/delete_24px"
-        android:contentDescription="Eliminar" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSumar"
+                style="@style/Widget.Material3.Button.Icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:icon="@drawable/add_48px"
+                app:iconTint="@color/white"
+                app:backgroundTint="@color/purple_500"
+                android:text="" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iconDelete"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="6dp"
+            android:src="@drawable/delete_24px"
+            android:contentDescription="Eliminar" />
+    </LinearLayout>
 </LinearLayout>
-

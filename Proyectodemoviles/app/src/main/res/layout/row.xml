@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="8dp">
+   
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv1"
@@ -38,4 +39,5 @@
         android:text="Precio: $0.00"
         android:textSize="14sp"
         android:textColor="#444" />
+
 </LinearLayout>
