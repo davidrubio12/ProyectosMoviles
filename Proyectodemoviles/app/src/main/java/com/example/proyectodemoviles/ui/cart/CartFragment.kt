@@ -37,8 +37,6 @@ class CartFragment : Fragment() {
 
         adapter = CartAdapter(
             emptyList(),
-            onSumar = { item -> viewModel.añadirProducto(item.productId, 1) },
-            onRestar = { item -> viewModel.añadirProducto(item.productId, -1) },
             onEliminar = { item -> viewModel.eliminarProducto(item.productId) }
         )
         recyclerView.adapter = adapter

@@ -3,8 +3,8 @@ package com.example.proyectodemoviles.repository
 import com.example.proyectodemoviles.model.dto.CartDto
 import com.example.proyectodemoviles.util.RetrofitClient
 import retrofit2.Response
-
 class CartRepository {
+
     private val cartService = RetrofitClient.getCartService()
 
     suspend fun getCart(): Response<CartDto> = cartService.getCart()

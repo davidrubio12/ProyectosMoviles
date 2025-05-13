@@ -38,4 +38,10 @@ class ProductAdapter(
         items = newItems
         notifyDataSetChanged()
     }
+
+    fun appendData(nuevos: List<ProductDto>) {
+        val inicio = items.size
+        items = items + nuevos
+        notifyItemRangeInserted(inicio, nuevos.size)
+    }
 }

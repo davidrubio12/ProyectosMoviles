@@ -60,7 +60,6 @@ class MainActivity : AppCompatActivity() {
             )
             main.addDrawerListener(toggle)
             toggle.syncState()
-//            myNavigationView.setNavigationItemSelectedListener ( this@MainActivity )
 
             myNavigationView.setNavigationItemSelectedListener {
                 when (it.itemId) {

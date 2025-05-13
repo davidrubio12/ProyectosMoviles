@@ -1,5 +1,6 @@
 package com.example.proyectodemoviles.repository
 
+
 import com.example.proyectodemoviles.model.PageResponse
 import com.example.proyectodemoviles.model.dto.ProductDto
 import com.example.proyectodemoviles.util.RetrofitClient
@@ -9,21 +10,16 @@ class ProductRepository {
 
     private val api = RetrofitClient.getProductService()
 
-    suspend fun getAllProducts(
+    suspend fun getProductosPaginados(
+        page: Int,
         search: String = "",
-        categoryId: Long? = null,
-        page: Int = 0,
-        size: Int = 100,
-        sortBy: String = "name",
-        sortDir: String = "asc"
+        categoriaId: Long? = null
     ): Response<PageResponse<ProductDto>> {
         return api.getProducts(
             search = search,
-            categoryId = categoryId,
+            categoryId = categoriaId,
             page = page,
-            size = size,
-            sortBy = sortBy,
-            sortDir = sortDir
+            size = 10
         )
     }
 }

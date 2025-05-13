@@ -58,15 +58,6 @@
             android:layout_height="wrap_content"
             android:gravity="center">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnRestar"
-                style="@style/Widget.Material3.Button.Icon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:icon="@drawable/remove_24px"
-                app:iconTint="@color/white"
-                app:backgroundTint="@color/purple_500"
-                android:text="" />
 
             <TextView
                 android:id="@+id/productoCantidad"
@@ -75,23 +66,7 @@
                 android:padding="8dp"
                 android:text="1" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSumar"
-                style="@style/Widget.Material3.Button.Icon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:icon="@drawable/add_48px"
-                app:iconTint="@color/white"
-                app:backgroundTint="@color/purple_500"
-                android:text="" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/iconDelete"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginTop="6dp"
-            android:src="@drawable/delete_24px"
-            android:contentDescription="Eliminar" />
     </LinearLayout>
 </LinearLayout>

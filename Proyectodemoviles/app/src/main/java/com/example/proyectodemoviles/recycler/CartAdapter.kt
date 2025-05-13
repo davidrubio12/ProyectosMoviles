@@ -1,3 +1,5 @@
+import android.app.AlertDialog
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -12,9 +14,7 @@ class CartAdapter(
 
         // La lista de productos que se mostrará en el RecyclerView.
     private var items: List<CartItemDto>,
-        // Las funciones que se llamarán cuando se pulse un botón de acción en la fila.
-    private val onSumar: (CartItemDto) -> Unit,
-    private val onRestar: (CartItemDto) -> Unit,
+
     private val onEliminar: (CartItemDto) -> Unit
 
     // Indicamos que usaremos MyViewCart como ViewHolder
@@ -44,26 +44,37 @@ class CartAdapter(
         holder.productoPrecio.text = "€ %.2f".format(item.unitPrice)
         holder.productoSubtotal.text = "Subtotal: € %.2f".format(item.subtotal)
 
+           // Evento para cuando se hace clic en el botón de eliminar un producto del carrito
+
+
     // Cargamos la imagen del producto desde una URL usando Glide
         Glide.with(holder.itemView.context)
             .load(item.imageUrl)
             .placeholder(R.drawable.broken_image)
             .into(holder.productoImagen)
-    // Evento para cuando se hace clic en el botón de sumar
-        holder.btnSumar.setOnClickListener {
-            onSumar(item)
-        }
 
-        holder.btnRestar.setOnClickListener {
-            if (item.quantity > 1) {
-                onRestar(item)
-            } else {
-                Toast.makeText(holder.itemView.context, "Cantidad mínima: 1", Toast.LENGTH_SHORT).show()
+
+    // Click en cualquier parte de la fila del producto
+    holder.itemView.setOnClickListener {
+        // Resalta el producto seleccionado
+        holder.itemView.setBackgroundColor(Color.parseColor("#FFEBEE")) // color rosa claro
+
+        // Mostrar el diálogo de confirmación
+        AlertDialog.Builder(holder.itemView.context)
+            .setTitle("Eliminar producto")
+            .setMessage("¿Deseas eliminar ${item.productName} del carrito?")
+            .setPositiveButton("Sí") { _, _ ->
+                onEliminar(item)
             }
-        }
-        // Evento para cuando se hace clic en el botón de eliminar un producto del carrito
-        holder.iconDelete.setOnClickListener {
-            onEliminar(item)
+            .setNegativeButton("No") { _, _ ->
+                // Si cancela, quitamos el color de resaltado
+                holder.itemView.setBackgroundColor(Color.TRANSPARENT)
+            }
+            .setOnDismissListener {
+                // También quitamos el color si el usuario cierra el diálogo sin pulsar nada
+                holder.itemView.setBackgroundColor(Color.TRANSPARENT)
+            }
+            .show()
         }
     }
     // Devuelve el número de elementos que contiene la lista.

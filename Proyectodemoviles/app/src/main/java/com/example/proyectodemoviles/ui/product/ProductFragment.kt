@@ -17,6 +17,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.proyectodemoviles.R
 import com.example.proyectodemoviles.recycler.ProductAdapter
 import com.example.proyectodemoviles.viewmodel.MainViewModel
+import com.google.android.material.snackbar.Snackbar
+
+
 
 class ProductFragment : Fragment() {
 
@@ -25,21 +28,33 @@ class ProductFragment : Fragment() {
     private lateinit var spinner: Spinner
     private lateinit var adapter: ProductAdapter
 
+    //Es un método del ciclo de vida de un Fragment que se llama cuando
+    // se va a crear la vista (UI) del fragmento.
+//    Parámetro	Significado
+//    inflater	Permite "inflar" (convertir) el layout XML en una vista (View)
+//    container	Es el ViewGroup padre donde se colocará el fragmento (por ejemplo, el FrameLayout del activity)
+//    savedInstanceState	Información previa del estado (si se recrea el fragmento tras rotación, etc.)
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_product, container, false)
 
-        // ViewModel
+        // Inicializamos el ViewModel que contiene la lógica de negocio
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
-        // RecyclerView
+        // Configuración del RecyclerView
         recyclerView = view.findViewById(R.id.recyclerProductos)
         val gridColumnCount = 2
+
         recyclerView.layoutManager = GridLayoutManager(requireContext(), gridColumnCount)
 
         adapter = ProductAdapter(emptyList()) { producto ->
+            // Abrir la actividad de detalle del producto cuando se pulsa
+            // Este código crea un intent y luego lo inicia en la actividad ProductDetailActivity
+            // Los parámetros extra son pasados a la actividad ProductDetailActivity para mostrar los detalles del producto seleccionado.
+            // Esto es una forma de pasar datos entre actividades en Android.
             val intent = Intent(requireContext(), ProductDetailActivity::class.java).apply {
                 putExtra("producto_id", producto.id)
                 putExtra("nombre_producto", producto.name)
@@ -50,7 +65,31 @@ class ProductFragment : Fragment() {
         }
         recyclerView.adapter = adapter
 
+        // Añadimos un listener que se activa cada vez que el usuario hace scroll en el RecyclerView
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+
+                val layoutManager = recyclerView.layoutManager as GridLayoutManager
+                    // Obtenemos la posición del último item visible en la lista
+                val lastVisible = layoutManager.findLastVisibleItemPosition()
+                val totalItems = adapter.itemCount
+                // Si estamos al final de la lista y no es la carga inicial...
+                if (lastVisible >= totalItems - 1 && !viewModel.cargaInicial) {
+                    Snackbar.make(recyclerView, "Hay más productos disponibles", Snackbar.LENGTH_LONG)
+                        .setAction("Cargar") {
+                            // Al pulsar "Cargar", obtenemos la categoría seleccionada del spinner
+                            val idCategoria = viewModel.getCategoriaIdPorPosicion(spinner.selectedItemPosition)
+                            viewModel.cargarSiguientePagina(categoriaId = idCategoria)
+                        }.show()
+                }
+            }
+        })
+
         // Spinner
+        // Cargamos las categorías en el spinner
+        // Este código es un ejemplo de cómo se pueden cargar datos en un spinner en Kotlin.
+        // En una app real, se podría hacer de manera más eficiente utilizando un adaptador personalizado para el spinner.
         spinner = view.findViewById(R.id.spinnerCategorias)
         val categorias = viewModel.getNombreCategorias()
         spinner.adapter = ArrayAdapter(
@@ -58,7 +97,7 @@ class ProductFragment : Fragment() {
             android.R.layout.simple_spinner_dropdown_item,
             categorias
         )
-
+        // Al seleccionar una categoría, cargamos los productos de esa categoría en el RecyclerView
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val categoriaId = viewModel.getCategoriaIdPorPosicion(position)
@@ -68,9 +107,13 @@ class ProductFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        // Observers
         viewModel.productos.observe(viewLifecycleOwner) { productos ->
-            adapter.updateData(productos)
+            if (viewModel.paginaActual == 0) {
+                adapter.updateData(productos) // Si es la primera página, reemplaza
+            } else {
+                adapter.appendData(productos) // Si es scroll, añade al final
+            }
+            viewModel.cargaInicial = false
         }
 
         viewModel.error.observe(viewLifecycleOwner) {

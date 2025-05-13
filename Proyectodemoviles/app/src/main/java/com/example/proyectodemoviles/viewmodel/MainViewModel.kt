@@ -25,23 +25,57 @@ class MainViewModel() : ViewModel() {
         "Accesorios" to 3L
     )
 
-    fun cargarProductos(search: String = "", categoriaId: Long? = null) {
+    var paginaActual = 0
+    private var totalPaginas = 1
+    var cargaInicial = true
+    private var isLoading = false
+
+    private val _datosCargados = mutableListOf<ProductDto>()
+
+    fun cargarProductos(search: String = "", categoriaId: Long? = null, reset: Boolean = false) {
+        if (isLoading) return
+        isLoading = true
+
+        if (reset) {
+            paginaActual = 0
+            totalPaginas = 1
+            cargaInicial = true
+            _datosCargados.clear()
+            _productos.value = emptyList()
+        }
+
         viewModelScope.launch {
             try {
-                val response = repository.getAllProducts(search, categoriaId)
+                val response = repository.getProductosPaginados(paginaActual, search, categoriaId)
+
                 if (response.isSuccessful) {
-                    _productos.value = response.body()?.content ?: emptyList()
+                    val page = response.body()
+                    totalPaginas = page?.totalPages ?: 1
+                    val nuevos = page?.content ?: emptyList()
+
+                    _datosCargados.addAll(nuevos)
+                    _productos.value = nuevos
                 } else {
                     _error.value = "Error: ${response.code()}"
                 }
             } catch (e: Exception) {
                 _error.value = "Error de red: ${e.localizedMessage}"
             }
+
+            isLoading = false
         }
     }
+
 
     fun getNombreCategorias(): List<String> = categorias.keys.toList()
 
     fun getCategoriaIdPorPosicion(position: Int): Long? =
         categorias[getNombreCategorias()[position]]
+
+    fun cargarSiguientePagina(categoriaId: Long? = null) {
+        if (paginaActual + 1 < totalPaginas) {
+            paginaActual++
+            cargarProductos(categoriaId = categoriaId, reset = false)
+        }
+    }
 }

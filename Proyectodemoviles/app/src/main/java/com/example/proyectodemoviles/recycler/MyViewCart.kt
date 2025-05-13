@@ -14,7 +14,5 @@ class MyViewCart(itemView: View)  : RecyclerView.ViewHolder(itemView) {
     val productoPrecio: TextView = itemView.findViewById(R.id.productoPrecio)
     val productoSubtotal: TextView = itemView.findViewById(R.id.productoSubtotal)
     val productoCantidad: TextView = itemView.findViewById(R.id.productoCantidad)
-    val btnSumar: MaterialButton = itemView.findViewById(R.id.btnSumar)
-    val btnRestar: MaterialButton = itemView.findViewById(R.id.btnRestar)
-    val iconDelete: ImageView = itemView.findViewById(R.id.iconDelete)
+
 }
