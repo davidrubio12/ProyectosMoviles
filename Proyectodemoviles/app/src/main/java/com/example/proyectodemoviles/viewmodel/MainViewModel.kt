@@ -18,12 +18,7 @@ class MainViewModel() : ViewModel() {
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
-    private val categorias = mapOf(
-        "Todo" to null,
-        "Cartas sueltas" to 1L,
-        "Sobres" to 2L,
-        "Accesorios" to 3L
-    )
+
 
     var paginaActual = 0
     private var totalPaginas = 1
@@ -67,10 +62,6 @@ class MainViewModel() : ViewModel() {
     }
 
 
-    fun getNombreCategorias(): List<String> = categorias.keys.toList()
-
-    fun getCategoriaIdPorPosicion(position: Int): Long? =
-        categorias[getNombreCategorias()[position]]
 
     fun cargarSiguientePagina(categoriaId: Long? = null) {
         if (paginaActual + 1 < totalPaginas) {

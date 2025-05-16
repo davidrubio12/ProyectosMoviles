@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyectodemoviles.R
 import com.example.proyectodemoviles.recycler.ProductAdapter
+import com.example.proyectodemoviles.viewmodel.CategoryViewModel
 import com.example.proyectodemoviles.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 
@@ -24,6 +25,7 @@ import com.google.android.material.snackbar.Snackbar
 class ProductFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
+    private lateinit var categoryViewModel: CategoryViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var spinner: Spinner
     private lateinit var adapter: ProductAdapter
@@ -43,6 +45,9 @@ class ProductFragment : Fragment() {
 
         // Inicializamos el ViewModel que contiene la lógica de negocio
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        categoryViewModel = ViewModelProvider(this)[CategoryViewModel::class.java]
+
+
 
         // Configuración del RecyclerView
         recyclerView = view.findViewById(R.id.recyclerProductos)
@@ -79,7 +84,8 @@ class ProductFragment : Fragment() {
                     Snackbar.make(recyclerView, "Hay más productos disponibles", Snackbar.LENGTH_LONG)
                         .setAction("Cargar") {
                             // Al pulsar "Cargar", obtenemos la categoría seleccionada del spinner
-                            val idCategoria = viewModel.getCategoriaIdPorPosicion(spinner.selectedItemPosition)
+                            val nombreSeleccionado = spinner.selectedItem as String
+                            val idCategoria = categoryViewModel.getCategoriaIdPorNombre(nombreSeleccionado)
                             viewModel.cargarSiguientePagina(categoriaId = idCategoria)
                         }.show()
                 }
@@ -91,21 +97,37 @@ class ProductFragment : Fragment() {
         // Este código es un ejemplo de cómo se pueden cargar datos en un spinner en Kotlin.
         // En una app real, se podría hacer de manera más eficiente utilizando un adaptador personalizado para el spinner.
         spinner = view.findViewById(R.id.spinnerCategorias)
-        val categorias = viewModel.getNombreCategorias()
-        spinner.adapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            categorias
-        )
+
+        categoryViewModel.cargarCategorias()
+
+        categoryViewModel.categorias.observe(viewLifecycleOwner) { lista ->
+            val nombres = mutableListOf("Todo") + lista.map { it.name }
+
+            val adapterSpinner = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                nombres
+            )
+            spinner.adapter = adapterSpinner
+
+            // Seleccionar "Todo" al abrir
+            spinner.setSelection(0)
+
+            // Cargar todos los productos al iniciar
+            viewModel.cargarProductos(reset = true)
+        }
+
         // Al seleccionar una categoría, cargamos los productos de esa categoría en el RecyclerView
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val categoriaId = viewModel.getCategoriaIdPorPosicion(position)
-                viewModel.cargarProductos(categoriaId = categoriaId)
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val nombreSeleccionado = spinner.selectedItem as String
+                val categoriaId = categoryViewModel.getCategoriaIdPorNombre(nombreSeleccionado)
+                viewModel.cargarProductos(categoriaId = categoriaId, reset = true)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+
 
         viewModel.productos.observe(viewLifecycleOwner) { productos ->
             if (viewModel.paginaActual == 0) {

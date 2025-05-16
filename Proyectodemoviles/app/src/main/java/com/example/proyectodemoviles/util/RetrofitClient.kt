@@ -3,6 +3,7 @@ package com.example.proyectodemoviles.util
 
 import com.example.proyectodemoviles.data.api.AuthService
 import com.example.proyectodemoviles.data.api.CartApiService
+import com.example.proyectodemoviles.data.api.CategoryApiService
 import com.example.proyectodemoviles.data.api.ProductApiService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -35,4 +36,5 @@ object RetrofitClient {
     fun getAuthService(): AuthService = retrofit.create(AuthService::class.java)
     fun getProductService(): ProductApiService = retrofit.create(ProductApiService::class.java)
     fun getCartService(): CartApiService = retrofit.create(CartApiService::class.java)
+    fun getCategoryService(): CategoryApiService = retrofit.create(CategoryApiService::class.java)
 }
