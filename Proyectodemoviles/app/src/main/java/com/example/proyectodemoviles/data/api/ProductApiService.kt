@@ -4,7 +4,6 @@ import com.example.proyectodemoviles.model.PageResponse
 import com.example.proyectodemoviles.model.dto.ProductDto
 import retrofit2.Response
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ProductApiService {

@@ -3,12 +3,11 @@ package com.example.proyectodemoviles.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.example.proyectodemoviles.model.dto.CategoryDto
 import com.example.proyectodemoviles.repository.CategoryRepository
 import kotlinx.coroutines.launch
-import retrofit2.Response
+
 
 class CategoryViewModel : ViewModel() {
     private val repository = CategoryRepository()

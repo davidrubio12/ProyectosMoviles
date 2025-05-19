@@ -12,19 +12,18 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyectodemoviles.R
 import com.example.proyectodemoviles.recycler.ProductAdapter
 import com.example.proyectodemoviles.viewmodel.CategoryViewModel
-import com.example.proyectodemoviles.viewmodel.MainViewModel
+import com.example.proyectodemoviles.viewmodel.ProductViewModel
 import com.google.android.material.snackbar.Snackbar
 
 
 
 class ProductFragment : Fragment() {
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: ProductViewModel
     private lateinit var categoryViewModel: CategoryViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var spinner: Spinner
@@ -44,7 +43,7 @@ class ProductFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_product, container, false)
 
         // Inicializamos el ViewModel que contiene la lógica de negocio
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        viewModel = ViewModelProvider(this)[ProductViewModel::class.java]
         categoryViewModel = ViewModelProvider(this)[CategoryViewModel::class.java]
 
 

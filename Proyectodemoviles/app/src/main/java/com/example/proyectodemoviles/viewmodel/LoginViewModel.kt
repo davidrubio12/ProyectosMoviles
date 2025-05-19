@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.proyectodemoviles.model.dto.JwtTokensDto
-import com.example.proyectodemoviles.model.dto.LoginUserDto
 import com.example.proyectodemoviles.repository.AuthRepository
 import kotlinx.coroutines.launch
 

@@ -8,7 +8,7 @@ import com.example.proyectodemoviles.model.dto.ProductDto
 import com.example.proyectodemoviles.repository.ProductRepository
 import kotlinx.coroutines.launch
 
-class MainViewModel() : ViewModel() {
+class ProductViewModel() : ViewModel() {
 
     private val repository = ProductRepository()
 

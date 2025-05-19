@@ -2,6 +2,8 @@ package com.example.proyectodemoviles.ui.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -76,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                         transaction.replace(R.id.myLinerLayout, productosFragment).commit()
                     }
                     R.id.id_carrito -> {
-                        // Mostrar el fragmento de carrito
+
                         val carritoFragment = CartFragment()
                         val transaction = supportFragmentManager.beginTransaction()
                         transaction.replace(R.id.myLinerLayout, carritoFragment)
@@ -84,10 +86,7 @@ class MainActivity : AppCompatActivity() {
                         transaction.commit()
                     }
                     R.id.id_logout -> {
-                        SessionManager.accessToken = "" // Limpia el token de memoria
-                        val intent = Intent(this@MainActivity, LoginActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
+                       logout()
                         true
                     }
                 }
@@ -98,8 +97,26 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-//    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-//        TODO("Not yet implemented")
-//
-//    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_logout -> {
+                logout()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun logout() {
+        SessionManager.accessToken = "" // Limpia el token
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+    }
+
 }
